@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Indri Larisma Nainggolan — Information Systems × Data Science</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap');
+
+  :root{
+    --ink:#EDF1FA;
+    --navy:#111C2D;
+    --navy-soft:#17263A; 
+
+    --blue:#4C8DFF;
+    --blue-dark:#2F6FE0;
+    --blue-soft:rgba(76,141,255,.16);
+
+    --background:#080C16;
+    --surface:#121C30;
+
+    --text:#E4E9F4;
+    --muted:#8993AC;
+
+    --line:#242F47;
+    --white:#FFFFFF;
+
+    --deep:#04060C;
+
+    --sans:'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', system-ui, sans-serif;
+    --serif:'Instrument Serif', Georgia, serif;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--background);
+    color:var(--text);
+    font-family:var(--sans);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:.01ms !important; transition-duration:.01ms !important;}
+  }
+  a{color:inherit;text-decoration:none;}
+  ::selection{background:rgba(76,141,255,.35);color:#F5F8FF;}
+
+  /* ---- 12 col grid ---- */
+  .wrap{max-width:1360px;margin:0 auto;padding-left:64px;padding-right:64px;}
+  .grid12{display:grid;grid-template-columns:repeat(12,1fr);column-gap:28px;}
+  @media (max-width:960px){.wrap{padding-left:24px;padding-right:24px;}}
+
+  .eyebrow{
+    font-size:12px;letter-spacing:.14em;color:var(--blue);font-weight:600;
+    display:flex;align-items:center;gap:10px;text-transform:uppercase;
+  }
+  .eyebrow .num{color:var(--muted);font-weight:500;font-variant-numeric:tabular-nums;}
+
+  /* ---------- NAV ---------- */
+  header{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    background:transparent;
+    border-bottom:1px solid transparent;
+    transition:background .4s ease, border-color .4s ease, backdrop-filter .4s ease;
+  }
+  header.scrolled{
+    background:rgba(8,12,22,.82);
+    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    border-bottom-color:var(--line);
+  }
+  .navbar{
+    max-width:1360px;margin:0 auto;padding:26px 64px;
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  @media (max-width:960px){.navbar{padding:20px 24px;}}
+  .logo{font-size:17px;font-weight:700;letter-spacing:-.01em;}
+  .nav-right{display:flex;align-items:center;gap:44px;}
+  nav ul{list-style:none;display:flex;gap:36px;}
+  nav a{font-size:13.5px;color:var(--text);position:relative;padding-bottom:3px;font-weight:500;}
+  nav a::after{
+    content:'';position:absolute;left:0;bottom:0;width:0;height:1px;background:var(--blue);
+    transition:width .35s cubic-bezier(.4,0,.2,1);
+  }
+  nav a:hover::after, nav a.active::after{width:100%;}
+  .status{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);font-weight:500;}
+  .status .dot{
+    width:7px;height:7px;border-radius:50%;background:var(--blue);
+    box-shadow:0 0 0 3px var(--blue-soft);
+    animation:pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+  .menu-btn{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px;}
+  .menu-btn span{width:22px;height:1.5px;background:var(--ink);display:block;}
+  @media (max-width:860px){
+    nav, .status{display:none;}
+    .menu-btn{display:flex;}
+  }
+  .mobile-nav{
+    display:none;position:fixed;inset:0;background:var(--background);z-index:99;
+    padding:110px 32px 40px;flex-direction:column;gap:26px;
+  }
+  .mobile-nav.open{display:flex;}
+  .mobile-nav a{font-size:30px;font-weight:600;letter-spacing:-.01em;}
+
+  /* ---------- HERO ---------- */
+  .hero{padding:180px 0 70px;position:relative;}
+  .hero-top-label{font-size:12.5px;letter-spacing:.16em;color:var(--muted);font-weight:600;margin-bottom:34px;text-transform:uppercase;}
+  .hero-name{
+    font-size:clamp(40px,6.6vw,88px);
+    line-height:.98;font-weight:800;letter-spacing:-.02em;color:var(--ink);
+  }
+  .hero-name .serif-last{
+    font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing:0;
+    display:block;
+  }
+  .hero-tagline{
+    margin-top:38px;font-size:clamp(24px,2.6vw,32px);font-weight:500;color:var(--text);
+    letter-spacing:-.01em;line-height:1.3;max-width:600px;
+  }
+  .hero-tagline .accent{color:var(--blue);}
+  .hero-sub{
+    margin-top:26px;font-size:16.5px;line-height:1.75;color:var(--muted);max-width:460px;
+  }
+  .hero-ctas{margin-top:44px;display:flex;gap:30px;align-items:center;flex-wrap:wrap;}
+  .btn-primary{
+    background:var(--blue);color:var(--white);padding:16px 30px;font-size:14px;font-weight:600;
+    display:inline-flex;align-items:center;gap:10px;transition:background .3s ease, transform .3s ease;
+  }
+  .btn-primary:hover{background:var(--blue-dark);transform:translateX(2px);}
+  .btn-secondary{
+    font-size:14px;font-weight:600;color:var(--text);border-bottom:1px solid var(--ink);padding-bottom:3px;
+    transition:color .3s ease, border-color .3s ease;
+  }
+  .btn-secondary:hover{color:var(--blue);border-color:var(--blue);}
+
+  .hero-cols{display:grid;grid-template-columns:7fr 5fr;gap:40px;align-items:start;margin-top:70px;}
+  @media (max-width:960px){.hero-cols{grid-template-columns:1fr;gap:50px;}.hero-visual{max-width:340px;margin:0 auto;}}
+
+  .hero-visual{
+    aspect-ratio:4/5;background:var(--navy);position:relative;overflow:hidden;
+    max-width:400px;margin-left:auto;
+  }
+  .hero-visual svg{width:100%;height:100%;}
+  .hero-visual img.profile-photo{
+    position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;
+    display:block;z-index:1;
+  }
+  .hero-visual svg{display:none;}
+  .hero-visual:not(.has-photo) img.profile-photo{display:none;}
+.hero-visual.photo-missing{display:flex;align-items:center;justify-content:center;}
+.hero-visual.photo-missing .photo-flag{display:block;}
+  .photo-flag{
+    position:absolute;top:16px;left:16px;z-index:2;
+    background:rgba(11,18,32,.72);backdrop-filter:blur(6px);
+    border:1px dashed rgba(234,241,255,.45);
+    color:#EAF1FF;font-size:10.5px;letter-spacing:.04em;font-weight:600;
+    padding:7px 11px;line-height:1.5;max-width:200px;
+  }
+  .hero-visual.has-photo .photo-flag{display:none;}
+
+  .hero-strip{
+    margin-top:80px;border-top:1px solid var(--line);
+    display:grid;grid-template-columns:repeat(3,1fr);
+  }
+  @media (max-width:640px){.hero-strip{grid-template-columns:1fr;}}
+  .hero-strip .item{padding:26px 28px 26px 0;border-right:1px solid var(--line);}
+  .hero-strip .item:last-child{border-right:none;}
+  @media (max-width:640px){.hero-strip .item{border-right:none;border-bottom:1px solid var(--line);padding:20px 0;}
+    .hero-strip .item:last-child{border-bottom:none;}}
+  .hero-strip .k{font-size:10.5px;letter-spacing:.14em;color:var(--muted);font-weight:600;margin-bottom:10px;text-transform:uppercase;}
+  .hero-strip .v{font-size:16px;color:var(--text);font-weight:500;line-height:1.4;}
+
+  /* ---------- SECTION HEAD ---------- */
+  section{padding:170px 0;scroll-margin-top:90px;}
+  @media (max-width:960px){section{padding:120px 0;scroll-margin-top:80px;}}
+  .sec-head{
+    display:grid;grid-template-columns:3fr 9fr;gap:40px;align-items:end;
+    margin-bottom:110px;border-bottom:1px solid var(--line);padding-bottom:50px;
+  }
+  @media (max-width:820px){.sec-head{grid-template-columns:1fr;gap:20px;}}
+  .sec-head h2{
+    font-size:clamp(30px,3.8vw,50px);font-weight:700;letter-spacing:-.015em;line-height:1.12;
+  }
+
+  /* ---------- ABOUT ---------- */
+  .about-grid{display:grid;grid-template-columns:7fr 5fr;gap:70px;}
+  @media (max-width:860px){.about-grid{grid-template-columns:1fr;gap:50px;}}
+  .about-grid p{font-size:18px;line-height:1.85;color:var(--text);max-width:560px;}
+  .stat-list{display:flex;flex-direction:column;}
+  .stat-row{
+    display:flex;align-items:baseline;justify-content:space-between;
+    border-top:1px solid var(--line);padding:28px 0;
+  }
+  .stat-row:last-child{border-bottom:1px solid var(--line);}
+  .stat-num{font-size:46px;font-weight:800;color:var(--ink);letter-spacing:-.02em;}
+  .stat-label{font-size:12.5px;letter-spacing:.08em;color:var(--muted);font-weight:600;text-align:right;text-transform:uppercase;}
+
+  /* ---------- EXPERIENCE ---------- */
+  .exp-row{
+    display:grid;grid-template-columns:1fr 11fr;gap:40px;
+    padding:52px 0;border-top:1px solid var(--line);
+  }
+  section .exp-row:last-of-type{border-bottom:1px solid var(--line);}
+  @media (max-width:760px){.exp-row{grid-template-columns:1fr;gap:14px;}}
+  .exp-year{font-size:16px;color:var(--muted);font-weight:600;font-variant-numeric:tabular-nums;}
+  .exp-body{display:grid;grid-template-columns:5fr 7fr;gap:40px;}
+  @media (max-width:760px){.exp-body{grid-template-columns:1fr;gap:16px;}}
+  .exp-company{font-size:24px;font-weight:700;color:var(--ink);letter-spacing:-.01em;margin-bottom:6px;}
+  .exp-role{font-size:14.5px;color:var(--blue);font-weight:600;}
+  .exp-meta{font-size:12.5px;color:var(--muted);margin-top:8px;}
+  .exp-badge{
+    display:inline-block;margin-top:12px;font-size:11px;letter-spacing:.06em;font-weight:700;
+    color:var(--blue);border:1px solid var(--blue-soft);background:var(--blue-soft);
+    padding:6px 11px;text-transform:uppercase;
+  }
+  .exp-list{list-style:none;display:flex;flex-direction:column;gap:11px;margin-bottom:22px;}
+  .exp-list li{font-size:15.5px;line-height:1.7;color:var(--text);padding-left:18px;position:relative;}
+  .exp-list li::before{content:'';position:absolute;left:0;top:9px;width:6px;height:1px;background:var(--blue);}
+  .tags{display:flex;gap:8px;flex-wrap:wrap;}
+  .tag{
+    font-size:11.5px;letter-spacing:.03em;color:var(--muted);
+    padding:0; font-weight:500;
+  }
+  .tags .tag:not(:last-child)::after{content:'·';margin-left:8px;color:var(--line);}
+
+  /* ---------- PROJECTS ---------- */
+  .project{
+    border-top:1px solid var(--line);padding:110px 0;
+    display:grid;grid-template-columns:4fr 8fr;gap:56px;align-items:start;
+  }
+  .project.reverse{grid-template-columns:8fr 4fr;}
+  .project.reverse .laptop-frame{order:2;}
+  .project.reverse .project-content{order:1;}
+  .project:last-of-type{border-bottom:1px solid var(--line);}
+  @media (max-width:960px){
+    .project, .project.reverse{grid-template-columns:1fr;gap:36px;}
+    .project.reverse .laptop-frame{order:0;}
+    .project.reverse .project-content{order:0;}
+    .laptop-frame{max-width:420px;}
+  }
+
+  /* Small landscape screenshot, laptop-screen proportions (16:9) */
+  .laptop-frame{
+    width:100%;max-width:400px;background:var(--navy-soft);border:1px solid var(--line);
+    border-radius:8px;overflow:hidden;
+    box-shadow:0 20px 40px -18px rgba(0,0,0,.5);
+  }
+  .laptop-bar{
+    display:flex;align-items:center;gap:6px;padding:7px 10px;
+    background:var(--navy-soft);border-bottom:1px solid var(--line);
+  }
+  .laptop-bar .dot{width:6px;height:6px;border-radius:50%;background:#3A4864;}
+  .laptop-bar .dot:nth-child(1){background:#FF5F57;}
+  .laptop-bar .dot:nth-child(2){background:#FEBC2E;}
+  .laptop-bar .dot:nth-child(3){background:#28C840;}
+  .laptop-bar .url{
+    margin-left:8px;font-size:9px;color:var(--muted);font-family:var(--sans);
+    background:var(--surface);border:1px solid var(--line);border-radius:4px;
+    padding:2px 8px;flex:1;
+  }
+  .project-visual{
+    width:100%;aspect-ratio:16/9;background:var(--navy);position:relative;overflow:hidden;
+  }
+  .project-visual svg{width:100%;height:100%;transition:transform .6s cubic-bezier(.2,.8,.2,1);}
+  .project:hover .project-visual svg{transform:scale(1.02);}
+  .project-visual img.shot{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;display:block;z-index:1;}
+  .project-visual svg{display:none;}
+  .project-visual:not(.has-shot) img.shot{display:none;}
+  .project-visual .photo-flag{max-width:200px;}
+  .project-visual.has-shot .photo-flag{display:none;}
+  .project-index{font-size:13px;color:var(--muted);font-weight:600;letter-spacing:.06em;margin-bottom:16px;}
+  .project-org{font-size:13.5px;color:var(--blue);font-weight:600;margin-bottom:20px;}
+  .project h3{font-size:clamp(28px,3.2vw,40px);font-weight:700;line-height:1.15;letter-spacing:-.015em;margin-bottom:32px;max-width:520px;}
+  .p-block{border-top:1px solid var(--line);padding:20px 0;}
+  .p-block:first-of-type{border-top:none;padding-top:0;}
+  .p-label{font-size:11px;letter-spacing:.1em;color:var(--muted);font-weight:600;margin-bottom:8px;text-transform:uppercase;}
+  .p-text{font-size:15.5px;line-height:1.75;color:var(--text);max-width:540px;}
+  .p-list{list-style:none;display:flex;flex-direction:column;gap:10px;}
+  .p-list li{font-size:15px;line-height:1.65;color:var(--text);padding-left:18px;position:relative;}
+  .p-list li::before{content:'';position:absolute;left:0;top:9px;width:6px;height:1px;background:var(--blue);}
+  .project-tech{display:flex;gap:8px;flex-wrap:wrap;margin:24px 0 30px;}
+  .tech-pill{font-size:12px;color:var(--muted);font-weight:500;background:var(--surface);border:1px solid var(--line);padding:7px 13px;}
+  .project-link{font-size:14px;font-weight:600;color:var(--ink);border-bottom:1px solid var(--ink);padding-bottom:3px;transition:color .3s,border-color .3s;}
+  .project-link:hover{color:var(--blue);border-color:var(--blue);}
+
+  /* ---------- SKILLS ---------- */
+  .skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:56px 40px;}
+  @media (max-width:860px){.skills-grid{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:560px){.skills-grid{grid-template-columns:1fr;}}
+  .skill-group .g-label{font-size:11.5px;letter-spacing:.1em;color:var(--blue);font-weight:600;margin-bottom:22px;text-transform:uppercase;}
+  .skill-items{display:flex;flex-direction:column;}
+  .skill-item{
+    font-size:18px;font-weight:500;color:var(--ink);padding:14px 0;border-top:1px solid var(--line);
+    transition:padding-left .3s ease, color .3s ease;cursor:default;
+  }
+  .skill-item:hover{padding-left:10px;color:var(--blue);}
+
+  /* ---------- CERTIFICATES ---------- */
+  .cert-item{
+    display:grid;grid-template-columns:auto auto 1fr auto;align-items:center;gap:24px;
+    padding:34px 0;border-top:1px solid var(--line);
+  }
+  .cert-list .cert-item:last-child{border-bottom:1px solid var(--line);}
+  @media (max-width:640px){.cert-item{grid-template-columns:1fr;gap:10px;}}
+  .cert-num{font-size:14px;color:var(--muted);font-weight:600;}
+  .cert-thumb{
+    width:44px;height:44px;border:1px dashed var(--line);color:var(--muted);
+    display:flex;align-items:center;justify-content:center;font-size:16px;
+  }
+  .cert-name{font-size:21px;font-weight:600;color:var(--ink);letter-spacing:-.01em;}
+  .cert-issuer{font-size:13px;color:var(--muted);margin-top:5px;}
+  .cert-view{font-size:13.5px;font-weight:600;color:var(--blue);text-align:right;white-space:nowrap;}
+  @media (max-width:640px){.cert-view{text-align:left;}}
+
+  /* ---------- CONTACT ---------- */
+  .contact{background:var(--deep);color:var(--white);}
+  .contact .sec-head{border-bottom-color:rgba(255,255,255,.14);}
+  .contact .sec-head h2{color:var(--white);}
+  .contact .eyebrow{color:#6EA0FF;}
+  .contact .eyebrow .num{color:rgba(255,255,255,.4);}
+  .contact-statement{
+    font-size:clamp(34px,5vw,60px);font-weight:700;letter-spacing:-.02em;line-height:1.14;max-width:840px;margin-bottom:28px;
+  }
+  .contact-sub{font-size:16.5px;line-height:1.75;color:rgba(255,255,255,.58);max-width:480px;margin-bottom:60px;}
+  .contact-email{
+    font-size:clamp(26px,4.6vw,48px);font-weight:700;color:var(--white);letter-spacing:-.015em;
+    border-bottom:1px solid rgba(255,255,255,.3);display:inline-block;padding-bottom:16px;
+    transition:color .3s ease,border-color .3s ease;
+  }
+  .contact-email:hover{color:#6EA0FF;border-color:#6EA0FF;}
+  .contact-links{margin-top:60px;display:flex;gap:44px;flex-wrap:wrap;}
+  .contact-links a{font-size:14px;font-weight:600;color:rgba(255,255,255,.78);border-bottom:1px solid rgba(255,255,255,.22);padding-bottom:3px;transition:color .3s,border-color .3s;}
+  .contact-links a:hover{color:var(--white);border-color:var(--white);}
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    padding:36px 0;border-top:1px solid rgba(255,255,255,.12);
+    background:var(--deep);color:rgba(255,255,255,.55);font-size:13px;
+  }
+  footer .f-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;}
+  footer .f-logo{color:var(--white);font-weight:700;font-size:16px;}
+  @media (max-width:640px){footer .f-inner{flex-direction:column;text-align:center;}}
+
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1);}
+  .reveal.in{opacity:1;transform:translateY(0);}
+
+  .hero-visual.photo-missing::after{
+    content:'Profile photo not found';
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    color:var(--muted);font-size:13px;background:var(--navy);z-index:3;
+  }
+  .project-visual.photo-missing::after{
+    content:'Project screenshot not found';
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    color:var(--muted);font-size:12px;background:var(--navy);z-index:3;
+  }
+</style>
+</head>
+<body>
+
+<header id="header">
+  <div class="navbar">
+    <a href="#" class="logo">ILN.</a>
+    <div class="nav-right">
+      <nav>
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#education">Education</a></li>
+          <li><a href="#experience">Experience</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#certificates">Certificates</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="status"><span class="dot"></span>Available for opportunities</div>
+    </div>
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<div class="mobile-nav" id="mobileNav">
+  <a href="#about">About</a>
+  <a href="#education">Education</a>
+  <a href="#experience">Experience</a>
+  <a href="#projects">Projects</a>
+  <a href="#skills">Skills</a>
+  <a href="#certificates">Certificates</a>
+  <a href="#contact">Contact</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-top-label reveal">Information Systems × Data Science</div>
+    <h1 class="hero-name reveal">Indri Larisma<span class="serif-last">Nainggolan</span></h1>
+
+    <div class="hero-cols">
+      <div>
+        <p class="hero-tagline reveal">Turning Data Into <span class="accent">Smarter Decisions.</span></p>
+        <p class="hero-sub reveal">Information Systems candidate specializing in Data Science, with experience building machine learning solutions, data dashboards, database systems, and business-focused analytics.</p>
+        <div class="hero-ctas reveal">
+          <a href="#projects" class="btn-primary">Explore Selected Work →</a>
+          <a href="#about" class="btn-secondary">About Me</a>
+        </div>
+      </div>
+
+      <div class="hero-visual has-photo reveal">
+        <!-- 📸 PHOTO SPOT 1: professional headshot / portrait. -->
+        <div class="photo-flag">📷 Photo not found. Put “pas foto.jpg” in the same folder as index.html.</div>
+        <img class="profile-photo" src="./pas%20foto.jpg" alt="Indri Larisma Nainggolan" loading="eager" decoding="async">
+        <svg viewBox="0 0 460 480" xmlns="http://www.w3.org/2000/svg">
+          <rect width="460" height="480" fill="#111C2D"/>
+          <g stroke="#1D4ED8" stroke-width="0.4" opacity="0.35">
+            <line x1="40" y1="0" x2="40" y2="480"/>
+            <line x1="140" y1="0" x2="140" y2="480"/>
+            <line x1="240" y1="0" x2="240" y2="480"/>
+            <line x1="340" y1="0" x2="340" y2="480"/>
+            <line x1="0" y1="100" x2="460" y2="100"/>
+            <line x1="0" y1="220" x2="460" y2="220"/>
+            <line x1="0" y1="340" x2="460" y2="340"/>
+            <line x1="0" y1="440" x2="460" y2="440"/>
+          </g>
+          <text x="36" y="56" fill="#EAF1FF" font-family="Inter,sans-serif" font-size="11" letter-spacing="1" opacity="0.55">01</text>
+          <text x="400" y="440" fill="#EAF1FF" font-family="Inter,sans-serif" font-size="11" letter-spacing="1" opacity="0.55">03</text>
+          <circle cx="80" cy="140" r="2.5" fill="#EAF1FF" opacity="0.7"/>
+          <circle cx="380" cy="90" r="2.5" fill="#EAF1FF" opacity="0.6"/>
+          <circle cx="120" cy="380" r="2.5" fill="#EAF1FF" opacity="0.6"/>
+          <circle cx="350" cy="360" r="2.5" fill="#EAF1FF" opacity="0.7"/>
+          <path d="M60,270 C130,240 160,300 210,260 C260,220 300,280 400,200" fill="none" stroke="#2563EB" stroke-width="1.4"/>
+          <circle cx="60" cy="270" r="3.5" fill="#2563EB"/>
+          <circle cx="210" cy="260" r="3.5" fill="#2563EB"/>
+          <circle cx="400" cy="200" r="4.5" fill="#2563EB"/>
+          <text x="230" y="245" fill="#2563EB" font-family="Inter,sans-serif" font-size="13" font-weight="600">0.82</text>
+          <g stroke="#1D4ED8" stroke-width="0.6" opacity="0.5">
+            <rect x="36" y="300" width="90" height="70" fill="none"/>
+          </g>
+          <text x="46" y="320" fill="#EAF1FF" font-family="Inter,sans-serif" font-size="9" opacity="0.55">MODEL / v2</text>
+          <line x1="46" y1="335" x2="116" y2="335" stroke="#2563EB" stroke-width="1"/>
+          <line x1="46" y1="350" x2="96" y2="350" stroke="#1D4ED8" stroke-width="1" opacity="0.6"/>
+          <line x1="46" y1="360" x2="108" y2="360" stroke="#1D4ED8" stroke-width="1" opacity="0.4"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="hero-strip reveal">
+      <div class="item">
+        <div class="k">Based in</div>
+        <div class="v">North Cikarang, West Java</div>
+      </div>
+      <div class="item">
+        <div class="k">Specialization</div>
+        <div class="v">Data Science</div>
+      </div>
+      <div class="item">
+        <div class="k">GPA</div>
+        <div class="v">3.76 / 4.00</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="wrap">
+  <div class="sec-head reveal">
+    <div class="eyebrow"><span class="num">01</span> About</div>
+    <h2>Data-driven thinking with a practical business perspective.</h2>
+  </div>
+  <div class="about-grid reveal">
+    <p>I am an Information Systems candidate (S.Kom) from President University specializing in Data Science, with a GPA of 3.76/4.00 and a 75% Jababeka Scholarship. I have experience developing machine learning-based predictive and recommendation systems, designing optimized database schemas, and transforming complex data into informative dashboards through Power BI and Looker Studio. My professional background spans procurement administration and data management at PLN Suku Cadang, as well as strategic business planning, product costing, and sales/order/backlog monitoring at PT Omron Manufacturing of Indonesia — experience that has strengthened my ability to connect technical solutions with real-world business needs.</p>
+    <div class="stat-list">
+      <div class="stat-row"><span class="stat-num">3.76</span><span class="stat-label">GPA</span></div>
+      <div class="stat-row"><span class="stat-num">75%</span><span class="stat-label">Jababeka Scholarship</span></div>
+      <div class="stat-row"><span class="stat-num">3+</span><span class="stat-label">Major Projects</span></div>
+      <div class="stat-row"><span class="stat-num">AWS</span><span class="stat-label">Certified</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education" class="wrap">
+  <div class="sec-head reveal">
+    <div class="eyebrow"><span class="num">02</span> Education</div>
+    <h2>Academic background.</h2>
+  </div>
+
+  <div class="exp-row reveal">
+    <div class="exp-year">2023—2026</div>
+    <div class="exp-body">
+      <div>
+        <div class="exp-company">President University</div>
+        <div class="exp-role">Bachelor of Computer Science (S.Kom) — Information Systems</div>
+        <div class="exp-meta">September 2023 — Expected December 2026</div>
+        <div class="exp-badge">Expected Graduate · December 2026</div>
+      </div>
+      <div>
+        <ul class="exp-list">
+          <li>GPA 3.76 / 4.00, specializing in Data Science.</li>
+          <li>Awardee of the Jababeka Scholarship (75%).</li>
+          <li>Expected to graduate in December 2026.</li>
+        </ul>
+        <div class="tags"><span class="tag">Information Systems</span><span class="tag">Data Science</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exp-row reveal">
+    <div class="exp-year">2020—2023</div>
+    <div class="exp-body">
+      <div>
+        <div class="exp-company">SMA Swasta Bintang Timur 1 Balige</div>
+        <div class="exp-role">Senior High School</div>
+        <div class="exp-meta">Balige, North Sumatra · June 2020 — June 2023</div>
+      </div>
+      <div></div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience" class="wrap">
+  <div class="sec-head reveal">
+    <div class="eyebrow"><span class="num">03</span> Experience</div>
+    <h2>Professional experience.</h2>
+  </div>
+
+  <div class="exp-row reveal">
+    <div class="exp-year">2026</div>
+    <div class="exp-body">
+      <div>
+        <div class="exp-company">PT Omron Manufacturing of Indonesia</div>
+        <div class="exp-role">Strategic Business Planning Intern</div>
+        <div class="exp-meta">June 2026 — September 2026</div>
+      </div>
+      <div>
+        <ul class="exp-list">
+          <li>Built and managed two primary Power BI dashboards: one for monitoring product costing and profitability, another for tracking sales, orders, and monthly backlog.</li>
+          <li>Performed data calculations and validation in Excel, cross-checking figures against Power BI to ensure reporting accuracy and reliable performance metrics.</li>
+          <li>Developed interactive visualizations of production costs, sales performance, and profit margins to support strategic decision-making for the business planning team.</li>
+        </ul>
+        <div class="tags"><span class="tag">Power BI</span><span class="tag">Excel</span><span class="tag">Business Analytics</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exp-row reveal">
+    <div class="exp-year">2025</div>
+    <div class="exp-body">
+      <div>
+        <div class="exp-company">PT PLN Suku Cadang</div>
+        <div class="exp-role">Procurement Intern</div>
+        <div class="exp-meta">September 2025 — April 2026</div>
+      </div>
+      <div>
+        <ul class="exp-list">
+          <li>Digitized and archived over 100+ procurement contracts between PLNSC and vendors, ensuring a secure and organized digital database.</li>
+          <li>Verified document completeness and updated vendor transaction data in the system with high precision to maintain data integrity.</li>
+          <li>Monitored procurement processes by compiling routine reports and streamlining document flow through coordination with relevant PICs.</li>
+          <li>Represented the team at Electricity Connect Exhibition 2025 to gain insights into power plant spare parts and strengthen supplier partnerships.</li>
+        </ul>
+        <div class="tags"><span class="tag">Procurement</span><span class="tag">Data Management</span><span class="tag">Document Control</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects" class="wrap">
+  <div class="sec-head reveal">
+    <div class="eyebrow"><span class="num">04</span> Selected Work</div>
+    <h2>Projects built with data, systems, and purpose.</h2>
+  </div>
+
+  <!-- PROJECT 01 : visual left, content right (5/7) -->
+  <div class="project reveal">
+    <div class="laptop-frame">
+      <div class="laptop-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">digi-pegadaian.app</span></div>
+    <div class="project-visual has-shot">
+      <!-- 📸 PHOTO SPOT 2: screenshot of the DCCP dashboard / Digi chatbot -->
+      <div class="photo-flag">📷 Add a screenshot of the DCCP dashboard or Digi chatbot here (landscape, e.g. 1280×800)</div>
+      <img class="shot" src="pegadaian.png" alt="Digital Corporate Culture Management System screenshot">
+      <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+        <rect width="400" height="300" fill="#111C2D"/>
+        <rect x="24" y="24" width="352" height="34" fill="none" stroke="#1D4ED8" stroke-width="0.8" opacity="0.6"/>
+        <circle cx="42" cy="41" r="3" fill="#2563EB"/>
+        <text x="58" y="45" fill="#EAF1FF" font-family="Inter,sans-serif" font-size="10" opacity="0.75">Digi — Corporate Culture Platform</text>
+        <rect x="24" y="74" width="166" height="202" fill="none" stroke="#1D4ED8" stroke-width="0.8" opacity="0.5"/>
+        <circle cx="107" cy="140" r="28" fill="none" stroke="#2563EB" stroke-width="1"/>
+        <circle cx="107" cy="140" r="4" fill="#2563EB"/>
+        <line x1="107" y1="140" x2="60" y2="210" stroke="#1D4ED8" stroke-width="0.6" opacity="0.7"/>
+        <line x1="107" y1="140" x2="150" y2="220" stroke="#1D4ED8" stroke-width="0.6" opacity="0.7"/>
+        <line x1="107" y1="140" x2="90" y2="240" stroke="#1D4ED8" stroke-width="0.6" opacity="0.7"/>
+        <circle cx="60" cy="210" r="3" fill="#EAF1FF" opacity="0.8"/>
+        <circle cx="150" cy="220" r="3" fill="#EAF1FF" opacity="0.8"/>
+        <circle cx="90" cy="240" r="3" fill="#EAF1FF" opacity="0.8"/>
+        <text x="36" y="100" fill="#EAF1FF" font-family="Inter,sans-serif" font-size="9" opacity="0.5">CHATBOT ENGINE</text>
+        <rect x="204" y="74" width="172" height="92" fill="none" stroke="#1D4ED8" stroke-width="0.8" opacity="0.5"/>
+        <text x="214" y="96" fill="#EAF1FF" font-family="Inter,sans-serif" font-size="9" opacity="0.5">ENGAGEMENT</text>
+        <polyline points="214,150 235,132 256,142 277,112 298,122 319,98 340,108" fill="none" stroke="#2563EB" stroke-width="1.4"/>
+        <rect x="204" y="182" width="172" height="94" fill="none" stroke="#1D4ED8" stroke-width="0.8" opacity="0.5"/>
+        <text x="214" y="202" fill="#EAF1FF" font-family="Inter,sans-serif" font-size="9" opacity="0.5">ADMIN MODULE</text>
+        <rect x="216" y="232" width="18" height="34" fill="#1D4ED8" opacity="0.6"/>
+        <rect x="242" y="212" width="18" height="54" fill="#2563EB" opacity="0.85"/>
+        <rect x="268" y="246" width="18" height="20" fill="#1D4ED8" opacity="0.5"/>
+        <rect x="294" y="202" width="18" height="64" fill="#2563EB"/>
+      </svg>
+    </div>
+    </div>
+    <div class="project-content">
+      <div class="project-index">Project 01</div>
+      <div class="project-org">PT Pegadaian · Capstone · Dec 2025 – Aug 2026</div>
+      <h3>Digital Corporate Culture Management System</h3>
+
+      <div class="p-block">
+        <div class="p-label">The Project</div>
+        <div class="p-text">Developed a web-based corporate culture management system for PT Pegadaian (Django), used to track employee participation and engagement.</div>
+      </div>
+      <div class="p-block">
+        <div class="p-label">Role</div>
+        <div class="p-text">Developer / Capstone Team</div>
+      </div>
+      <div class="p-block">
+        <div class="p-label">Key Contribution</div>
+        <ul class="p-list">
+          <li>Built "Digi", an AI chatbot with RAG and a recommendation engine to personalize content for employees.</li>
+          <li>Developed the Django-based management platform.</li>
+          <li>Implemented the admin forgot-password module.</li>
+          <li>Successfully defended the capstone project at the final examination (August 2026) and completed all requested revisions.</li>
+        </ul>
+      </div>
+
+      <div class="project-tech">
+        <span class="tech-pill">Python</span><span class="tech-pill">Django</span><span class="tech-pill">PostgreSQL</span><span class="tech-pill">Machine Learning</span><span class="tech-pill">JavaScript</span>
+      </div>
+      <a href="#" class="project-link">View Case Study ↗</a>
+    </div>
+  </div>
+
+  <!-- PROJECT 02 : content left, visual right (7/5) -->
+  <div class="project reverse reveal">
+    <div class="laptop-frame">
+      <div class="laptop-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">predictive-analytics.app</span></div>
+    <div class="project-visual has-shot">
+      <!-- 📸 PHOTO SPOT 3: screenshot of the predictive analytics dashboard -->
+      <div class="photo-flag">📷 Add a screenshot of the Student Predictive Analytics dashboard here (landscape, e.g. 1280×800)</div>
+      <img class="shot" src="predict.png" alt="Student Predictive Analytics screenshot">
+      <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+        <rect width="400" height="300" fill="#111C2D"/>
+        <g stroke="#1D4ED8" stroke-width="0.4" opacity="0.4">
+          <line x1="24" y1="24" x2="24" y2="276"/>
+          <line x1="128" y1="24" x2="128" y2="276"/>
+          <line x1="232" y1="24" x2="232" y2="276"/>
+          <line x1="336" y1="24" x2="336" y2="276"/>
+          <line x1="24" y1="60" x2="376" y2="60"/>
+          <line x1="24" y1="150" x2="376" y2="150"/>
+          <line x1="24" y1="240" x2="376" y2="240"/>
+        </g>
+        <text x="24" y="46" fill="#EAF1FF" font-family="Inter,sans-serif" font-size="10" opacity="0.75">Student Predictive Analytics</text>
+        <circle cx="70" cy="110" r="9" fill="#2563EB" opacity="0.85"/>
+        <circle cx="90" cy="130" r="7" fill="#1D4ED8" opacity="0.7"/>
+        <circle cx="130" cy="90" r="11" fill="#2563EB" opacity="0.5"/>
+        <circle cx="180" cy="140" r="8" fill="#1D4ED8" opacity="0.8"/>
+        <circle cx="210" cy="100" r="6" fill="#2563EB" opacity="0.45"/>
+        <circle cx="270" cy="160" r="13" fill="#2563EB" opacity="0.9"/>
+        <circle cx="300" cy="120" r="7" fill="#1D4ED8" opacity="0.6"/>
+        <circle cx="330" cy="150" r="9" fill="#2563EB" opacity="0.65"/>
+        <line x1="40" y1="220" x2="360" y2="220" stroke="#1D4ED8" stroke-width="0.8" opacity="0.5"/>
+        <path d="M40,220 L90,205 L140,215 L190,190 L240,200 L290,180 L340,195" fill="none" stroke="#2563EB" stroke-width="1.4"/>
+        <text x="300" y="255" fill="#EAF1FF" font-family="Inter,sans-serif" font-size="9" opacity="0.5">RF · K-MEANS</text>
+      </svg>
+    </div>
+    </div>
+    <div class="project-content">
+      <div class="project-index">Project 02</div>
+      <div class="project-org">Final Project — Data Science · Programmer · May 2025</div>
+      <h3>Student Predictive Analytics</h3>
+
+      <div class="p-block">
+        <div class="p-label">The Problem</div>
+        <div class="p-text">Identify students who may require academic intervention.</div>
+      </div>
+      <div class="p-block">
+        <div class="p-label">The Solution</div>
+        <div class="p-text">A web-based predictive analytics system using Random Forest combined with student engagement analysis.</div>
+      </div>
+      <div class="p-block">
+        <div class="p-label">Key Contribution</div>
+        <ul class="p-list">
+          <li>Implemented Random Forest prediction.</li>
+          <li>Integrated PostgreSQL with Django.</li>
+          <li>Applied K-Means clustering.</li>
+          <li>Created interactive performance visualizations.</li>
+        </ul>
+      </div>
+
+      <div class="project-tech">
+        <span class="tech-pill">Python</span><span class="tech-pill">Random Forest</span><span class="tech-pill">K-Means</span><span class="tech-pill">Django</span><span class="tech-pill">PostgreSQL</span>
+      </div>
+      <a href="#" class="project-link">View Case Study ↗</a>
+    </div>
+  </div>
+
+  <!-- PROJECT 03 : visual left, content right (5/7) -->
+  <div class="project reveal">
+    <div class="laptop-frame">
+      <div class="laptop-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">concentration-recommender.app</span></div>
+    <div class="project-visual has-shot">
+      <!-- 📸 PHOTO SPOT 4: screenshot of the recommendation engine UI -->
+      <div class="photo-flag">📷 Add a screenshot of the Concentration Recommendation Engine here (landscape, e.g. 1280×800)</div>
+      <img class="shot" src="concentration.png" alt="Student Recommendation Concentration screenshot">
+      <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+        <rect width="400" height="300" fill="#111C2D"/>
+        <text x="24" y="40" fill="#EAF1FF" font-family="Inter,sans-serif" font-size="10" opacity="0.75">Concentration Recommendation Engine</text>
+        <circle cx="200" cy="165" r="4" fill="#EAF1FF"/>
+        <circle cx="200" cy="165" r="58" fill="none" stroke="#1D4ED8" stroke-width="0.5" opacity="0.5"/>
+        <circle cx="200" cy="165" r="96" fill="none" stroke="#1D4ED8" stroke-width="0.5" opacity="0.35"/>
+        <line x1="200" y1="165" x2="140" y2="105" stroke="#2563EB" stroke-width="1"/>
+        <line x1="200" y1="165" x2="270" y2="115" stroke="#2563EB" stroke-width="1"/>
+        <line x1="200" y1="165" x2="130" y2="225" stroke="#2563EB" stroke-width="1"/>
+        <line x1="200" y1="165" x2="280" y2="235" stroke="#2563EB" stroke-width="1"/>
+        <line x1="200" y1="165" x2="200" y2="75" stroke="#1D4ED8" stroke-width="0.6" opacity="0.6"/>
+        <circle cx="140" cy="105" r="5" fill="#2563EB"/>
+        <circle cx="270" cy="115" r="5" fill="#2563EB"/>
+        <circle cx="130" cy="225" r="5" fill="#2563EB"/>
+        <circle cx="280" cy="235" r="5" fill="#2563EB"/>
+        <circle cx="200" cy="75" r="5" fill="#EAF1FF" opacity="0.8"/>
+        <text x="150" y="260" fill="#EAF1FF" font-family="Inter,sans-serif" font-size="9" opacity="0.5">100% RELIABILITY</text>
+      </svg>
+    </div>
+    </div>
+    <div class="project-content">
+      <div class="project-index">Project 03</div>
+      <div class="project-org">Project Manager · Jun – Aug 2025</div>
+      <h3>Student Recommendation Concentration</h3>
+
+      <div class="p-block">
+        <div class="p-label">The Project</div>
+        <div class="p-text">A machine learning recommendation engine designed to support students in selecting their academic concentration.</div>
+      </div>
+      <div class="p-block">
+        <div class="p-label">Role</div>
+        <div class="p-text">Project Manager</div>
+      </div>
+      <div class="p-block">
+        <div class="p-label">Key Contribution</div>
+        <ul class="p-list">
+          <li>Led a cross-functional development team.</li>
+          <li>Managed task allocation and development lifecycle.</li>
+          <li>Coordinated system testing and authentication integration.</li>
+          <li>Achieved 100% reliability based on conducted system testing.</li>
+        </ul>
+      </div>
+
+      <div class="project-tech">
+        <span class="tech-pill">Python</span><span class="tech-pill">Machine Learning</span><span class="tech-pill">Recommendation System</span><span class="tech-pill">Web Development</span>
+      </div>
+      <a href="#" class="project-link">View Case Study ↗</a>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills" class="wrap">
+  <div class="sec-head reveal">
+    <div class="eyebrow"><span class="num">05</span> Toolkit</div>
+    <h2>Technologies I work with.</h2>
+  </div>
+
+  <div class="skills-grid reveal">
+    <div class="skill-group">
+      <div class="g-label">Programming</div>
+      <div class="skill-items">
+        <div class="skill-item">Python</div>
+        <div class="skill-item">PHP</div>
+        <div class="skill-item">Java</div>
+        <div class="skill-item">JavaScript</div>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="g-label">Data &amp; Machine Learning</div>
+      <div class="skill-items">
+        <div class="skill-item">Pandas</div>
+        <div class="skill-item">NumPy</div>
+        <div class="skill-item">Scikit-learn</div>
+        <div class="skill-item">Power BI</div>
+        <div class="skill-item">Excel</div>
+        <div class="skill-item">Looker Studio</div>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="g-label">Database</div>
+      <div class="skill-items">
+        <div class="skill-item">PostgreSQL</div>
+        <div class="skill-item">MySQL</div>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="g-label">Development &amp; Tools</div>
+      <div class="skill-items">
+        <div class="skill-item">Django</div>
+        <div class="skill-item">Jupyter Notebook</div>
+        <div class="skill-item">pgAdmin</div>
+        <div class="skill-item">VS Code</div>
+        <div class="skill-item">XAMPP</div>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="g-label">Professional</div>
+      <div class="skill-items">
+        <div class="skill-item">Analytical Thinking</div>
+        <div class="skill-item">Problem Solving</div>
+        <div class="skill-item">Teamwork</div>
+        <div class="skill-item">Time Management</div>
+        <div class="skill-item">Document Control</div>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="g-label">Languages</div>
+      <div class="skill-items">
+        <div class="skill-item">Indonesian — Native</div>
+        <div class="skill-item">English — Intermediate</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CERTIFICATES -->
+<section id="certificates" class="wrap">
+  <div class="sec-head reveal">
+    <div class="eyebrow"><span class="num">06</span> Certifications</div>
+    <h2>Continuous learning.</h2>
+  </div>
+
+  <div class="cert-list reveal">
+    <div class="cert-item">
+      <div class="cert-num">01</div>
+      <!-- 📸 optional: replace this div with an <img> of the certificate/badge thumbnail -->
+      <div class="cert-thumb" title="Add certificate thumbnail image">🎓</div>
+      <div>
+        <div class="cert-name">Digital Classroom: Practical Data Science</div>
+        <div class="cert-issuer">Amazon Web Services</div>
+      </div>
+      <a href="#" class="cert-view">View Certificate ↗</a>
+    </div>
+    <div class="cert-item">
+      <div class="cert-num">02</div>
+      <div class="cert-thumb" title="Add certificate thumbnail image">🎓</div>
+      <div>
+        <div class="cert-name">Machine Learning</div>
+        <div class="cert-issuer">Amazon Web Services</div>
+      </div>
+      <a href="#" class="cert-view">View Certificate ↗</a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="contact">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="eyebrow"><span class="num">07</span> Contact</div>
+      <h2>Get in touch.</h2>
+    </div>
+    <div class="reveal">
+      <p class="contact-statement">Let's build something meaningful with data.</p>
+      <p class="contact-sub">I'm open to opportunities in Data Science, Data Analytics, Business Intelligence, Information Systems, and related technology roles.</p>
+      <a href="mailto:indrilarisma92@gmail.com" class="contact-email">indrilarisma92@gmail.com</a>
+      <div class="contact-links">
+        <a href="https://wa.me/628568149159" target="_blank" rel="noopener">WhatsApp ↗</a>
+        <a href="http://www.linkedin.com/in/indri-nainggolan-04707b28b" target="_blank" rel="noopener">LinkedIn ↗</a>
+        <!-- add your GitHub profile URL below -->
+        <a href="#">GitHub ↗</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap f-inner">
+    <span class="f-logo">ILN.</span>
+    <span>Information Systems × Data Science</span>
+    <span>© 2026 Indri Larisma Nainggolan</span>
+  </div>
+</footer>
+
+<script>
+  const header = document.getElementById('header');
+  window.addEventListener('scroll', () => header.classList.toggle('scrolled', window.scrollY > 20));
+
+  const menuBtn = document.getElementById('menuBtn');
+  const mobileNav = document.getElementById('mobileNav');
+  menuBtn.addEventListener('click', () => mobileNav.classList.toggle('open'));
+  mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileNav.classList.remove('open')));
+
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, {threshold:0.12});
+  revealEls.forEach(el => io.observe(el));
+
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('nav a');
+  const navObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        navLinks.forEach(l => l.classList.remove('active'));
+        const link = document.querySelector('nav a[href="#'+entry.target.id+'"]');
+        if(link) link.classList.add('active');
+      }
+    });
+  }, {rootMargin:'-45% 0px -45% 0px'});
+  sections.forEach(s => navObs.observe(s));
+
+  document.querySelectorAll('img').forEach(img => {
+    img.addEventListener('error', () => {
+      const parent = img.closest('.hero-visual, .project-visual');
+      if(parent) parent.classList.add('photo-missing');
+      img.style.display = 'none';
+      if(parent && parent.classList.contains('hero-visual')) parent.classList.remove('has-photo');
+      if(parent && parent.classList.contains('project-visual')) parent.classList.remove('has-shot');
+    });
+    img.addEventListener('load', () => {
+      const parent = img.closest('.hero-visual, .project-visual');
+      if(parent) parent.classList.remove('photo-missing');
+    });
+  });
+</script>
+
+</body>
+</html>
