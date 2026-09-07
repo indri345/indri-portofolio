@@ -285,6 +285,14 @@
   .project-link{font-size:14px;font-weight:600;color:var(--ink);border-bottom:1px solid var(--ink);padding-bottom:3px;transition:color .3s,border-color .3s;}
   .project-link:hover{color:var(--blue);border-color:var(--blue);}
 
+
+  /* ---------- PROJECT 04 ONLY: mobile screenshot ---------- */
+  .project-04 .laptop-frame{max-width:400px;}
+  .project-04 .project-04-visual{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;background:var(--navy);}
+  .project-04 .project-04-visual img.shot{position:relative;inset:auto;width:auto;height:100%;max-width:100%;object-fit:contain;object-position:center;z-index:1;}
+  .project-04 .project-04-visual.has-shot .photo-flag{display:none;}
+  .project-04 .project-04-visual svg{display:none;}
+
   /* ---------- SKILLS ---------- */
   .skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:56px 40px;}
   @media (max-width:860px){.skills-grid{grid-template-columns:repeat(2,1fr);}}
@@ -640,7 +648,7 @@
       <div class="project-tech">
         <span class="tech-pill">Python</span><span class="tech-pill">Django</span><span class="tech-pill">PostgreSQL</span><span class="tech-pill">Machine Learning</span><span class="tech-pill">JavaScript</span>
       </div>
-      <a href="#" class="project-link">View Case Study ↗</a>
+      <a href="https://capstone-rli6.vercel.app/" class="project-link">View Case Study ↗</a>
     </div>
   </div>
 
@@ -762,7 +770,59 @@
       <div class="project-tech">
         <span class="tech-pill">Python</span><span class="tech-pill">Machine Learning</span><span class="tech-pill">Recommendation System</span><span class="tech-pill">Web Development</span>
       </div>
-      <a href="#" class="project-link">View Case Study ↗</a>
+      <a href="https://github.com/indri345/student-concentration-recommendation" class="project-link">View Case Study ↗</a>
+    </div>
+  </div>
+</section>
+
+ <!-- PROJECT 04 : content left, visual right (7/5) -->
+  <div class="project reverse reveal project-04">
+    <div class="laptop-frame">
+      <div class="laptop-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">puma-is.app</span></div>
+    <div class="project-visual has-shot project-04-visual">
+      <!-- 📸 PHOTO SPOT 5: screenshot of the PUMA IS application (e.g. Event Posters / Voting screen) -->
+      <div class="photo-flag">📷 Add a screenshot of the PUMA IS application here (landscape or centered mobile screenshot, e.g. 1280×800)</div>
+      <img class="shot" src="puma.png" alt="PUMA Information System Application screenshot">
+      <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+        <rect width="400" height="300" fill="#111C2D"/>
+        <text x="24" y="40" fill="#EAF1FF" font-family="Inter,sans-serif" font-size="10" opacity="0.75">PUMA Information System</text>
+        <rect x="150" y="20" width="100" height="260" rx="14" fill="none" stroke="#1D4ED8" stroke-width="1.2" opacity="0.6"/>
+        <rect x="160" y="40" width="80" height="50" fill="none" stroke="#2563EB" stroke-width="0.8" opacity="0.7"/>
+        <rect x="160" y="100" width="80" height="18" fill="#2563EB" opacity="0.5"/>
+        <rect x="160" y="126" width="80" height="18" fill="#1D4ED8" opacity="0.4"/>
+        <rect x="160" y="152" width="80" height="18" fill="#1D4ED8" opacity="0.4"/>
+        <circle cx="225" cy="252" r="8" fill="#2563EB" opacity="0.8"/>
+        <text x="270" y="120" fill="#EAF1FF" font-family="Inter,sans-serif" font-size="9" opacity="0.5">EVENTS</text>
+        <text x="270" y="140" fill="#EAF1FF" font-family="Inter,sans-serif" font-size="9" opacity="0.5">VOTING</text>
+      </svg>
+    </div>
+    </div>
+    <div class="project-content">
+      <div class="project-index">Project 04</div>
+      <div class="project-org">Information Systems Student Organization · Developer</div>
+      <h3>Puma Information System Application</h3>
+ 
+      <div class="p-block">
+        <div class="p-label">The Project</div>
+        <div class="p-text">A mobile application designed to help Information Systems students access information about events and other activities related to the Information Systems program.</div>
+      </div>
+      <div class="p-block">
+        <div class="p-label">Role</div>
+        <div class="p-text">Developer / Programmer</div>
+      </div>
+      <div class="p-block">
+        <div class="p-label">Key Contribution</div>
+        <ul class="p-list">
+          <li>Developed the mobile application using Flutter and Dart.</li>
+          <li>Built the event browsing feature, allowing end-users to explore a variety of events and view detailed information about each one.</li>
+          <li>Implemented a voting feature, enabling end-users to participate in voting sessions for decisions or competitions hosted within the platform.</li>
+        </ul>
+      </div>
+ 
+      <div class="project-tech">
+        <span class="tech-pill">Flutter</span><span class="tech-pill">Dart</span><span class="tech-pill">Mobile Development</span>
+      </div>
+      <a href="https://github.com/indri345/Mobile-programming" class="project-link">View Case Study ↗</a>
     </div>
   </div>
 </section>
